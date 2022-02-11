@@ -1,5 +1,5 @@
 # minewall
-An anti-cheat mod for Minecraft Bedrock Dedicated Server, supports BDS version 1.18.2.03.
+An anti-cheat mod for Minecraft Bedrock Dedicated Server, supports BDS version 1.18.11.01.
 
 This tweak hooks CraftResults_DEPRECATEDASKTYLAING (marked deprecated by mojang but haven't been deprecated for a long period and still taking an important position) and revalidate it by comparing it with the recipe id sent in the previous action (CraftRecipe).
 

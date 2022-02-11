@@ -99,6 +99,8 @@ enum class ItemStackRequestActionType : unsigned char {
 	Destroy,
 	Consume,
 	Create,
+	PlaceInItemContainer,
+	TakeFromItemContainer,
 	ScreenLabTableCombine,
 	ScreenBeaconPayment,
 	ScreenHUDMineBlock,
@@ -315,7 +317,7 @@ public:
 
 class MerchantRecipeList {
 public:
-	MerchantRecipe *getRecipeByNetId(TypedServerNetId<RecipeNetIdTag,unsigned int, 0u> const&);
+	MerchantRecipe *getRecipeByNetId(TypedServerNetId<RecipeNetIdTag,unsigned int, 0u> const&) const;
 };
 
 template <typename A, enum ItemStackRequestActionType B>
@@ -817,7 +819,7 @@ TInstanceHook(bool, _ZN23ItemStackNetManagerBase23_isRequestActionAllowedERK22It
 		return original(this, action);
 		
 	}else if(action.getActionType()==ItemStackRequestActionType::CraftRecipe) {
-		ItemStackRequestActionCraft<TypedServerNetId<RecipeNetIdTag,unsigned int, 0u>,(ItemStackRequestActionType)10> *craft=(ItemStackRequestActionCraft<TypedServerNetId<RecipeNetIdTag,unsigned int, 0u>,(ItemStackRequestActionType)10> *)&action;
+		ItemStackRequestActionCraft<TypedServerNetId<RecipeNetIdTag,unsigned int, 0u>,(ItemStackRequestActionType)12> *craft=(ItemStackRequestActionCraft<TypedServerNetId<RecipeNetIdTag,unsigned int, 0u>,(ItemStackRequestActionType)12> *)&action;
 		TypedServerNetId<RecipeNetIdTag,unsigned int, 0u> const& craftId=craft->getRecipeNetId();
 		std::string trans=craftId.toString();
 		//modloader::Log::debug("VA","Original craftId: %s",trans.c_str());
@@ -826,7 +828,7 @@ TInstanceHook(bool, _ZN23ItemStackNetManagerBase23_isRequestActionAllowedERK22It
 		pendingRecipes[player]=craftId;
 		recipesLock.unlock();
 	}else if(action.getActionType()==ItemStackRequestActionType::CraftCreative) {
-		ItemStackRequestActionCraft<TypedServerNetId<CreativeItemNetIdTag,unsigned int, 0u>,(ItemStackRequestActionType)12> *cr=(ItemStackRequestActionCraft<TypedServerNetId<CreativeItemNetIdTag,unsigned int, 0u>,(ItemStackRequestActionType)12> *)&action;
+		ItemStackRequestActionCraft<TypedServerNetId<CreativeItemNetIdTag,unsigned int, 0u>,(ItemStackRequestActionType)14> *cr=(ItemStackRequestActionCraft<TypedServerNetId<CreativeItemNetIdTag,unsigned int, 0u>,(ItemStackRequestActionType)14> *)&action;
 		TypedServerNetId<CreativeItemNetIdTag,unsigned int, 0u> const& itemId=cr->getRecipeNetId();
 		ServerPlayer *player=*(ServerPlayer**)((uint64_t*)this+2);
 		recipesLock.lock();
@@ -850,5 +852,6 @@ TInstanceHook(bool, _ZN23ItemStackNetManagerBase23_isRequestActionAllowedERK22It
 	modloader::Log::info("minewall","Handled furnace output swapping hack");
 	return false;
 }
+
 
 
